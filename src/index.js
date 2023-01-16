@@ -18,14 +18,12 @@ async function onSearch(e) {
   e.preventDefault();
 
   photoApiService.searchQuery = e.currentTarget.elements.searchQuery.value;
-  photoApiService.resetPage();
-
   try {
+    photoApiService.resetPage();
     clearGalleryMarkup();
 
     if (photoApiService.searchQuery === '') {
       Notiflix.Notify.warning('Please enter your request');
-      refs.gallery.classList.remove('js-gallery');
       return;
     }
 
@@ -37,8 +35,10 @@ async function onSearch(e) {
     chekingResponseFromBackend(hits.length);
     renderCardsOfPhotos(hits);
     informsTotalHits(totalHits);
-    photoApiService.resetPage();
   } catch (error) {
+    Notiflix.Notify.failure(
+      "We're sorry, but you've reached the end of search results."
+    );
     console.log(error.message);
   }
 }
@@ -67,9 +67,9 @@ async function onLoad(entries, observer) {
 
         if (request.data.totalHits <= refs.gallery.children.length) {
           observer.unobserve(refs.guard);
-          Notiflix.Notify.failure(
-            "We're sorry, but you've reached the end of search results."
-          );
+          // Notiflix.Notify.failure(
+          //   "We're sorry, but you've reached the end of search results."
+          // );
         }
       }
     });
@@ -78,9 +78,12 @@ async function onLoad(entries, observer) {
   }
 }
 function onScroll() {
-  const { height: cardHeight } = document
-    .querySelector('.gallery')
-    .firstElementChild.getBoundingClientRect();
+  if (!refs.gallery.firstElementChild) {
+    return;
+  }
+  
+  const { height: cardHeight } =
+    refs.gallery.firstElementChild.getBoundingClientRect();
 
   window.scrollBy({
     top: cardHeight * 2,
@@ -89,7 +92,9 @@ function onScroll() {
 }
 function createsSimplelightbox() {
   const options = {
+    captionsData: 'alt',
     captionDelay: 250,
+    download: true,
   };
   const lightbox = new SimpleLightbox('.gallery a', options);
   lightbox.refresh();
@@ -136,11 +141,12 @@ function renderCardsOfPhotos(arr) {
     .join('');
 
   refs.gallery.insertAdjacentHTML('beforeend', markup);
+  observer.observe(refs.guard);
+  createsSimplelightbox();
+  onScroll();
+
   if (refs.gallery.classList.contains('js-gallery')) {
     return;
   }
   refs.gallery.classList.add('js-gallery');
-  onScroll();
-  createsSimplelightbox();
-  observer.observe(refs.guard);
 }
