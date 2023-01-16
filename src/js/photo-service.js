@@ -6,7 +6,6 @@ const API_KEY = '32850329-b1ad59fa6423bb8f4069942ac';
 export default class PhotoApiService {
   constructor() {
     this.searchQuery = '';
-    this.perPage = 40;
     this.page = 1;
   }
 
@@ -18,7 +17,7 @@ export default class PhotoApiService {
       orientation: 'horizontal',
       safesearch: true,
       page: this.page,
-      per_page: this.perPage,
+      per_page: 40,
     });
     const url = `${BASE_URL}/?${params}`;
     this.incrementPage();
