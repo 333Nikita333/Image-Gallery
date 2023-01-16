@@ -32,25 +32,21 @@ async function onSearch(e) {
       data: { hits, totalHits },
     } = response;
 
-    chekingResponseFromBackend(hits.length);
+    if (hits.length === 0) {
+      Notiflix.Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
+      return;
+    }
+    
     renderCardsOfPhotos(hits);
     informsTotalHits(totalHits);
   } catch (error) {
-    Notiflix.Notify.failure(
-      "We're sorry, but you've reached the end of search results."
-    );
     console.log(error.message);
   }
 }
 function clearGalleryMarkup() {
   refs.gallery.innerHTML = '';
-}
-function chekingResponseFromBackend(amountPhoto) {
-  if (amountPhoto === 0) {
-    Notiflix.Notify.failure(
-      'Sorry, there are no images matching your search query. Please try again.'
-    );
-  }
 }
 function informsTotalHits(hits) {
   if (hits === 0) {
@@ -66,10 +62,10 @@ async function onLoad(entries, observer) {
         renderCardsOfPhotos(request.data.hits);
 
         if (request.data.totalHits <= refs.gallery.children.length) {
+          Notiflix.Notify.failure(
+            "We're sorry, but you've reached the end of search results."
+          );
           observer.unobserve(refs.guard);
-          // Notiflix.Notify.failure(
-          //   "We're sorry, but you've reached the end of search results."
-          // );
         }
       }
     });
@@ -81,7 +77,7 @@ function onScroll() {
   if (!refs.gallery.firstElementChild) {
     return;
   }
-  
+
   const { height: cardHeight } =
     refs.gallery.firstElementChild.getBoundingClientRect();
 
@@ -100,6 +96,9 @@ function createsSimplelightbox() {
   lightbox.refresh();
 }
 function renderCardsOfPhotos(arr) {
+  if (arr.length === 0) {
+    return;
+  }
   const markup = arr
     .map(
       ({
