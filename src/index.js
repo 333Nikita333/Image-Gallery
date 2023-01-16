@@ -154,7 +154,6 @@ function createsSimplelightbox() {
   const options = {
     captionsData: 'alt',
     captionDelay: 250,
-    download: true,
   };
   const lightbox = new SimpleLightbox('.gallery a', options);
   lightbox.refresh();
