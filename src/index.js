@@ -39,7 +39,7 @@ async function onSearch(e) {
       );
       return;
     }
-    
+    observer.observe(refs.guard);
     renderCardsOfPhotos(hits);
     informsTotalHits(totalHits);
     
@@ -53,6 +53,7 @@ function renderCardsOfPhotos(arr) {
   if (arr.length === 0) {
     return;
   }
+  
   const markup = arr
     .map(
       ({
@@ -96,7 +97,6 @@ function renderCardsOfPhotos(arr) {
   refs.gallery.insertAdjacentHTML('beforeend', markup);
   createsSimplelightbox();
   onScroll();
-  observer.observe(refs.guard);
   
   if (refs.gallery.classList.contains('js-gallery')) {
     return;
