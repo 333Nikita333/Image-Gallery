@@ -115,7 +115,7 @@ img {
 .search-form input:valid + .search-btn:active {
   transform: translateY(1px);
 }
-.gallery {
+.js-gallery {
   display: flex;
   gap: 30px;
   flex-wrap: wrap;
