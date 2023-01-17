@@ -31,7 +31,7 @@ async function onSearch(e) {
 
     const request = await photoApiService.processRequest();
     const {
-      data: { hits, totalHits },
+      data: { totalHits },
     } = request;
 
     if (totalHits === 0) {
