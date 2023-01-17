@@ -7,6 +7,7 @@ export default class PhotoApiService {
   constructor() {
     this.searchQuery = '';
     this.page = 1;
+    this.perPage = 40;
   }
 
   async processRequest() {
@@ -17,7 +18,7 @@ export default class PhotoApiService {
       orientation: 'horizontal',
       safesearch: true,
       page: this.page,
-      per_page: 40,
+      per_page: this.perPage,
     });
     const url = `${BASE_URL}/?${params}`;
     this.incrementPage();

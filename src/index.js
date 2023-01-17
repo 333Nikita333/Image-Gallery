@@ -19,7 +19,8 @@ async function onSearch(e) {
   e.preventDefault();
 
   try {
-    photoApiService.searchQuery = e.currentTarget.elements.searchQuery.value.trim();
+    photoApiService.searchQuery =
+      e.currentTarget.elements.searchQuery.value.trim();
     photoApiService.resetPage();
     clearGalleryMarkup();
 
@@ -42,21 +43,17 @@ async function onSearch(e) {
     observer.observe(refs.guard);
     renderCardsOfPhotos(hits);
     informsTotalHits(totalHits);
-    
   } catch (error) {
-    Notiflix.Notify.failure(
-      "We're sorry, but you've reached the end of search results."
-    );
     console.log(error.message);
   }
 }
 
-//* Creates photo gallery markup  
+//* Creates photo gallery markup
 function renderCardsOfPhotos(arr) {
   if (arr.length === 0) {
     return;
   }
-  
+
   const markup = arr
     .map(
       ({
@@ -110,7 +107,15 @@ async function onLoad(entries, observer) {
         const request = await photoApiService.processRequest();
         renderCardsOfPhotos(request.data.hits);
 
-        if (request.data.totalHits <= refs.gallery.children.length) {
+        const currentPage = photoApiService.page;
+        const totalPage = Math.ceil(
+          request.data.totalHits / photoApiService.perPage
+        );
+
+        if (totalPage <= currentPage) {
+          Notiflix.Notify.failure(
+            "We're sorry, but you've reached the end of search results."
+          );
           observer.unobserve(refs.guard);
         }
       }
@@ -150,4 +155,3 @@ function createsSimplelightbox() {
   const lightbox = new SimpleLightbox('.gallery a', options);
   lightbox.refresh();
 }
-
