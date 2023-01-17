@@ -19,7 +19,7 @@ async function onSearch(e) {
   e.preventDefault();
 
   try {
-    photoApiService.searchQuery = e.currentTarget.elements.searchQuery.value;
+    photoApiService.searchQuery = e.currentTarget.elements.searchQuery.value.trim();
     photoApiService.resetPage();
     clearGalleryMarkup();
 
@@ -44,6 +44,9 @@ async function onSearch(e) {
     informsTotalHits(totalHits);
     
   } catch (error) {
+    Notiflix.Notify.failure(
+      "We're sorry, but you've reached the end of search results."
+    );
     console.log(error.message);
   }
 }
@@ -97,11 +100,6 @@ function renderCardsOfPhotos(arr) {
   refs.gallery.insertAdjacentHTML('beforeend', markup);
   createsSimplelightbox();
   onScroll();
-  
-  if (refs.gallery.classList.contains('js-gallery')) {
-    return;
-  }
-  refs.gallery.classList.add('js-gallery');
 }
 
 //* Infinite scroll
@@ -113,9 +111,6 @@ async function onLoad(entries, observer) {
         renderCardsOfPhotos(request.data.hits);
 
         if (request.data.totalHits <= refs.gallery.children.length) {
-          Notiflix.Notify.failure(
-            "We're sorry, but you've reached the end of search results."
-          );
           observer.unobserve(refs.guard);
         }
       }
@@ -131,7 +126,7 @@ function onScroll() {
     refs.gallery.firstElementChild.getBoundingClientRect();
 
   window.scrollBy({
-    top: cardHeight * 2,
+    top: cardHeight * 0,
     behavior: 'smooth',
   });
 }
