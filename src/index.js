@@ -34,12 +34,6 @@ async function onSearch(e) {
       data: { hits, totalHits },
     } = request;
 
-    if (totalHits === 0) {
-      Notiflix.Notify.failure(
-        'Sorry, there are no images matching your search query. Please try again.'
-      );
-      return;
-    }
     observer.observe(refs.guard);
     renderCardsOfPhotos(hits);
     informsTotalHits(totalHits);
@@ -105,12 +99,20 @@ async function onLoad(entries, observer) {
     entries.forEach(async entry => {
       if (entry.isIntersecting) {
         const request = await photoApiService.processRequest();
-        renderCardsOfPhotos(request.data.hits);
-
+        const {
+          data: { hits, totalHits },
+        } = request;
         const currentPage = photoApiService.page;
-        const totalPage = Math.ceil(
-          request.data.totalHits / photoApiService.perPage
-        );
+        const totalPage = Math.ceil(totalHits / photoApiService.perPage);
+        
+        renderCardsOfPhotos(hits);
+
+        if (totalHits === 0) {
+          Notiflix.Notify.failure(
+            'Sorry, there are no images matching your search query. Please try again.'
+          );
+          return;
+        }
 
         if (totalPage < currentPage) {
           Notiflix.Notify.failure(
@@ -143,6 +145,9 @@ function clearGalleryMarkup() {
 
 //* Informing about the number of found photos
 function informsTotalHits(hits) {
+  if (hits === 0) {
+    return;
+  }
   Notiflix.Notify.success(`Hooray! We found ${hits} images.`);
 }
 
