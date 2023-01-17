@@ -19,9 +19,9 @@ async function onSearch(e) {
   e.preventDefault();
 
   try {
+    photoApiService.resetPage();
     photoApiService.searchQuery =
       e.currentTarget.elements.searchQuery.value.trim();
-    photoApiService.resetPage();
     clearGalleryMarkup();
 
     if (photoApiService.searchQuery === '') {
@@ -34,8 +34,14 @@ async function onSearch(e) {
       data: { hits, totalHits },
     } = request;
 
+    if (totalHits === 0) {
+      Notiflix.Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
+      return;
+    }
+
     observer.observe(refs.guard);
-    renderCardsOfPhotos(hits);
     informsTotalHits(totalHits);
   } catch (error) {
     console.log(error.message);
@@ -104,18 +110,10 @@ async function onLoad(entries, observer) {
         } = request;
         const currentPage = photoApiService.page;
         const totalPage = Math.ceil(totalHits / photoApiService.perPage);
-        
+
         renderCardsOfPhotos(hits);
 
-        if (totalHits === 0) {
-          photoApiService.resetPage();
-          Notiflix.Notify.failure(
-            'Sorry, there are no images matching your search query. Please try again.'
-          );
-          return;
-        }
-
-        if (totalPage < currentPage) {
+        if (totalPage < currentPage && refs.gallery.children.length > 0) {
           Notiflix.Notify.failure(
             "We're sorry, but you've reached the end of search results."
           );
