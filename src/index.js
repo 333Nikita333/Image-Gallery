@@ -127,9 +127,6 @@ async function onLoad(entries, observer) {
 
 //* Smooth scrolling
 function onScroll() {
-  if (!refs.gallery.firstElementChild) {
-    return;
-  }
   const { height: cardHeight } =
     refs.gallery.firstElementChild.getBoundingClientRect();
 
