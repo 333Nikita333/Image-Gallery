@@ -7,7 +7,7 @@ import PhotoApiService from './js/photo-service';
 const refs = getRefs();
 const optionsObserver = {
   root: null,
-  rootMargin: '300px',
+  rootMargin: '200px',
   threshold: 0,
 };
 let observer = new IntersectionObserver(onLoad, optionsObserver);
@@ -19,30 +19,28 @@ async function onSearch(e) {
   e.preventDefault();
 
   try {
-    photoApiService.resetPage();
     photoApiService.searchQuery =
       e.currentTarget.elements.searchQuery.value.trim();
     clearGalleryMarkup();
+    photoApiService.resetPage();
 
     if (photoApiService.searchQuery === '') {
-      Notiflix.Notify.warning('Please enter your request');
-      return;
+      return Notiflix.Notify.warning('Please enter your request');
     }
 
     const request = await photoApiService.processRequest();
     const {
-      data: { totalHits },
+      data: { hits, totalHits },
     } = request;
 
     if (totalHits === 0) {
-      Notiflix.Notify.failure(
+      return Notiflix.Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
-      );
-      return;
-    }
-
-    observer.observe(refs.guard);
-    informsTotalHits(totalHits);
+      )}
+    
+      renderCardsOfPhotos(hits);
+      informsTotalHits(totalHits); 
+      
   } catch (error) {
     console.log(error.message);
   }
@@ -50,7 +48,7 @@ async function onSearch(e) {
 
 //* Creates photo gallery markup
 function renderCardsOfPhotos(arr) {
-  if (arr.length === 0) {
+  if (arr.length === 0 || photoApiService.searchQuery === '') {
     return;
   }
 
@@ -96,7 +94,8 @@ function renderCardsOfPhotos(arr) {
 
   refs.gallery.insertAdjacentHTML('beforeend', markup);
   createsSimplelightbox();
-  onScroll();
+  
+  observer.observe(refs.gallery.lastElementChild);
 }
 
 //* Infinite scroll
@@ -112,12 +111,13 @@ async function onLoad(entries, observer) {
         const totalPage = Math.ceil(totalHits / photoApiService.perPage);
 
         renderCardsOfPhotos(hits);
+        onScroll();
 
         if (totalPage < currentPage && refs.gallery.children.length > 0) {
           Notiflix.Notify.failure(
             "We're sorry, but you've reached the end of search results."
           );
-          observer.unobserve(refs.guard);
+          observer.unobserve(refs.gallery.lastElementChild);
         }
       }
     });
@@ -132,7 +132,7 @@ function onScroll() {
     refs.gallery.firstElementChild.getBoundingClientRect();
 
   window.scrollBy({
-    top: cardHeight * 0,
+    top: cardHeight * 2,
     behavior: 'smooth',
   });
 }
@@ -144,9 +144,6 @@ function clearGalleryMarkup() {
 
 //* Informing about the number of found photos
 function informsTotalHits(hits) {
-  if (hits === 0) {
-    return;
-  }
   Notiflix.Notify.success(`Hooray! We found ${hits} images.`);
 }
 

@@ -1,3 +1,6 @@
+body {
+  background: linear-gradient(to right, #70e1f3, #ffd193);
+}
 img {
   display: block;
   width: 100%;
@@ -135,7 +138,7 @@ img {
 }
 .info {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   gap: 15px;
   width: 100%;
   padding: 10px;
@@ -152,14 +155,9 @@ img {
   text-align: center;
   font-size: 15px;
 }
-
 @media screen and (prefers-color-scheme: dark) {
-  body,
   input {
     color: #f1f1f1;
-  }
-  body {
-    background: #171717;
   }
   .search-form input {
     box-shadow: 0 0 0 0.4em #f1f1f1 inset;
