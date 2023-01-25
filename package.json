@@ -1,15 +1,15 @@
 {
-  "name": "goit-js-hw-11",
+  "name": "image-gallery",
   "version": "2.0.0",
   "description": "",
-  "homepage": "https://333Nikita333.github.io/goit-js-hw-11",
+  "homepage": "https://333Nikita333.github.io/Image-Gallery",
   "scripts": {
     "start": "parcel src/*.html",
-    "build": "parcel build src/*.html --public-url /goit-js-hw-11/"
+    "build": "parcel build src/*.html --public-url /Image-Gallery/"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/333Nikita333/goit-js-hw-11.git"
+    "url": "git+https://github.com/333Nikita333/Image-Gallery.git"
   },
   "keywords": [],
   "author": "Alexander Repeta <alexander.repeta@gmail.com>",
