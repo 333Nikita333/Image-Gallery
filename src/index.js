@@ -36,11 +36,11 @@ async function onSearch(e) {
     if (totalHits === 0) {
       return Notiflix.Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
-      )}
-    
-      renderCardsOfPhotos(hits);
-      informsTotalHits(totalHits); 
-      
+      );
+    }
+
+    renderCardsOfPhotos(hits);
+    informsTotalHits(totalHits);
   } catch (error) {
     console.log(error.message);
   }
@@ -94,7 +94,7 @@ function renderCardsOfPhotos(arr) {
 
   refs.gallery.insertAdjacentHTML('beforeend', markup);
   createsSimplelightbox();
-  
+
   observer.observe(refs.gallery.lastElementChild);
 }
 
