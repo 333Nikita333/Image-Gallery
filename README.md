@@ -1,5 +1,5 @@
-# Image Search and Viewer App
-Welcome to the Image Search and Viewer App repository! This project is a simple application for searching and viewing images based on keywords. It uses the Pixabay API as the backend to fetch images and implements pagination with infinite scrolling using the IntersectionObserver API. Image viewing is achieved through the SimpleLightbox library.
+# Image-Gallery
+Welcome to the Image-Gallery repository! This project is a simple application for searching and viewing images based on keywords. It uses the Pixabay API as the backend to fetch images and implements pagination with infinite scrolling using the IntersectionObserver API. Image viewing is achieved through the SimpleLightbox library.
 
 ## Table of Contents
 - [Introduction](#introduction)
